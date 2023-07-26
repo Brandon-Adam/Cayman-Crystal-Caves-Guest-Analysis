@@ -1,36 +1,36 @@
 --Deleting empty rows
 DELETE 
-FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.invoices_cruise_ships_only` 
+FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.invoices_source_A_only` 
 WHERE Date IS NULL;
 
---Deleting single row in cruise data where cruise ship name is incorrect
+--Deleting single row in source_A data where source_A group name is incorrect
 DELETE 
-FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.invoices_cruise_ships_only` 
+FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.invoices_source_A_only` 
 WHERE Market_Penetration____ = "#N/A";
 
 DELETE
-FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.invoices_tour_companies` 
+FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.invoices_source_D_companies` 
 WHERE Date IS NULL;
 
 
----------------------------------Cruise Ships Only-------------------------
---Total guests and percent kids from each tour company
+---------------------------------source_A Only-------------------------
+--Total guests and percent kids from each source_A sub company
 SELECT
-  Tour_Company,
+  source_A_sub_Company,
   SUM(Total_Guests) AS Total_Guests,
   SUM(Adults) AS Total_Adults,
   SUM(Kids) AS Total_Kids,
   SUM(Kids)/SUM(Total_Guests)*100 AS percent_kids,
   SUM(Total) AS total_paid,
   ROUND(AVG(Total_Guests)) AS avg_guests
-FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.invoices_cruise_ships_only` 
-GROUP BY Tour_Company;
+FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.invoices_source_A_only` 
+GROUP BY source_A_sub_Company;
 
 
---Total guests and percent kids from each ship
+--Total guests and percent kids from each source_A
 SELECT
-  Cruise_Ship_Name,
-  Cruise_Company,
+  source_A_group_Name,
+  source_A_Company,
   Market_Penetration____,
   SUM(Total_Guests) AS Total_Guests,
   SUM(Adults) AS Total_Adults,
@@ -38,15 +38,15 @@ SELECT
   SUM(Kids)/SUM(Total_Guests)*100 AS percent_kids,
   SUM(Total) AS total_paid,
   ROUND(AVG(Total_Guests)) AS avg_guests
-FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.invoices_cruise_ships_only` 
-GROUP BY Cruise_Ship_Name, Cruise_Company, Market_Penetration____;
+FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.invoices_source_A_only` 
+GROUP BY source_A_group_Name, source_A_Company, Market_Penetration____;
 
 
 --Same as above with date added
 SELECT
   Date,
-  Cruise_Ship_Name,
-  Cruise_Company,
+  source_A_group_Name,
+  source_A_Company,
   Market_Penetration____,
   SUM(Total_Guests) AS Total_Guests,
   SUM(Adults) AS Total_Adults,
@@ -54,13 +54,13 @@ SELECT
   SUM(Kids)/SUM(Total_Guests)*100 AS percent_kids,
   SUM(Total) AS total_paid,
   ROUND(AVG(Total_Guests)) AS avg_guests
-FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.invoices_cruise_ships_only` 
-GROUP BY Cruise_Ship_Name, Cruise_Company, Date, Market_Penetration____;
+FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.invoices_source_A_only` 
+GROUP BY source_A_group_Name, source_A_Company, Date, Market_Penetration____;
 
 
---Total guests and percent kids from each cruise company
+--Total guests and percent kids from each source_A company
 SELECT
-  Cruise_Company,
+  source_A_Company,
   SUM(Total_Guests) AS Total_Guests,
   SUM(Adults) AS Total_Adults,
   SUM(Kids) AS Total_Kids,
@@ -72,14 +72,14 @@ FROM
   (
     SELECT *,
       PARSE_NUMERIC(Market_Penetration____ ) AS market_pen
-    FROM`optimal-bivouac-388416.Cayman_Crystal_Caves.invoices_cruise_ships_only` 
+    FROM`optimal-bivouac-388416.Cayman_Crystal_Caves.invoices_source_A_only` 
   )
-GROUP BY Cruise_Company;
+GROUP BY source_A_Company;
 
 
 --Most popular time for cruise companies
 SELECT
-  Cruise_Company,
+  source_A_Company,
   Time,
   SUM(Total_Guests) AS Total_Guests,
   SUM(Adults) AS Total_Adults,
@@ -87,8 +87,8 @@ SELECT
   SUM(Kids)/SUM(Total_Guests)*100 AS percent_kids,
   SUM(Total) AS total_paid,
   ROUND(AVG(Total_Guests)) AS avg_guests
-FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.invoices_cruise_ships_only` 
-GROUP BY Time, Cruise_Company;
+FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.invoices_source_A_only` 
+GROUP BY Time, source_A_Company;
 
 
 
@@ -96,21 +96,21 @@ GROUP BY Time, Cruise_Company;
 ---------------------------------Tour Companies------------------------------
 
 SELECT
-  Tour_Company,
+  source_D_Company,
   Price,
   SUM(Total) AS total_paid,
   SUM(Adults) AS Total_Adults,
   SUM(Kids) AS Total_Kids,
   SUM(Kids)/SUM(Total_Guests)*100 AS percent_kids,
   ROUND(AVG(Total_Guests)) AS avg_guests,
-FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.invoices_tour_companies`
-WHERE Cruise_Ship_Name IS NULL
+FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.invoices_source_D_companies`
+WHERE source_A_group_Name IS NULL
 GROUP BY 
-  Tour_Company,
+  source_D_Company,
   Price;
 
 SELECT
-  Tour_Company,
+  source_D_Company,
   Time,
   SUM(Total) AS total_paid,
   SUM(Adults) AS Total_Adults,
@@ -118,10 +118,10 @@ SELECT
   SUM(Kids)/SUM(Total_Guests)*100 AS percent_kids,
   ROUND(AVG(Total_Guests)) AS avg_guests,
   SUM(Total_Guests) AS total_guests
-FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.invoices_tour_companies`
-WHERE Cruise_Ship_Name IS NULL
+FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.invoices_source_D_companies`
+WHERE source_A_group_Name IS NULL
 GROUP BY 
-  Tour_Company,
+  source_D_Company,
   Time;
 
 
@@ -132,13 +132,13 @@ GROUP BY
 
 ----------------------------Full Data---------------------------------------
 --Deleting rows that are N/A for analysis and adding boolean column for local
-CREATE TABLE Cayman_Crystal_Caves.customer_data_stayovers
+CREATE TABLE Cayman_Crystal_Caves.customer_data_source_C
   AS (SELECT *,
         CASE
-          WHEN Adult_Type LIKE "Local Adult"
+          WHEN Adult_Type LIKE "Source B Adult"
             THEN TRUE
             ELSE FALSE
-        END AS Local
+        END AS BorC
       FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.customer_data`
       WHERE Adult_Rate_US_ <> "0" AND 
         Reservation_Type LIKE "%Peek%" OR 
@@ -147,26 +147,26 @@ CREATE TABLE Cayman_Crystal_Caves.customer_data_stayovers
 --Finding different adult types
 SELECT
 DISTINCT Adult_Type
-FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.customer_data_stayovers`;
+FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.customer_data_source_C`;
 
---Local vs non-local
+--B vs C
 SELECT 
   SUM(Total_Qty) AS Total_Qty,
   Local
-FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.customer_data_stayovers`
+FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.customer_data_source_C`
 GROUP BY Local;
 
---Tour Times for stayovers
+--Tour Times for source_C
 SELECT
   SUM(Total_Qty) AS total_guests,
   SUM(Adult_Qty) AS total_adults,
   SUM(Kids_Qty) AS total_kids,
   Tour_Time,
   Local
-FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.customer_data_stayovers`
+FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.customer_data_source_C`
 GROUP BY 
   Tour_Time,
-  Local;
+  BorC;
 
 
 
@@ -175,7 +175,7 @@ GROUP BY
 SELECT
   Time,
   SUM(Total_Guests) AS Total_Guests
-FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.invoices_cruise_ships_only` 
+FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.invoices_source_A_only` 
 GROUP BY 
 Time;
 
@@ -184,28 +184,28 @@ Time;
 SELECT
   Time,
   SUM(Total_Guests) AS Total_Guests
-FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.invoices_tour_companies`
-WHERE Cruise_Ship_Name IS NULL
+FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.invoices_source_D_companies`
+WHERE source_A_group_Name IS NULL
 GROUP BY 
   Time;
 
---Stayovers
+--Source C
 SELECT
   Tour_Time AS Time,
   SUM(Total_Qty) AS Total_Guests
 FROM
-`optimal-bivouac-388416.Cayman_Crystal_Caves.customer_data_stayovers`
-WHERE Local IS FALSE
+`optimal-bivouac-388416.Cayman_Crystal_Caves.customer_data_source_C`
+WHERE BorC IS FALSE
 GROUP BY
   Tour_Time;
 
---Locals
+--Source C
 SELECT
   Tour_Time AS Time,
   SUM(Total_Qty) AS Total_Guests
 FROM
-`optimal-bivouac-388416.Cayman_Crystal_Caves.customer_data_stayovers`
-WHERE Local IS TRUE
+`optimal-bivouac-388416.Cayman_Crystal_Caves.customer_data_source_C`
+WHERE BorC IS TRUE
 GROUP BY
   Tour_Time;
 
@@ -220,8 +220,8 @@ CREATE TABLE Cayman_Crystal_Caves.time_grouped
   SUM(Total_Guests) AS Total_Guests
 FROM(SELECT 
   *,
-  CASE WHEN Total_Guests IS NOT NULL THEN "Cruise" ELSE null END AS Type
-  FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.invoices_cruise_ships_only`)
+  CASE WHEN Total_Guests IS NOT NULL THEN "source_A" ELSE null END AS Type
+  FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.invoices_source_A_only`)
 GROUP BY 
 Time,
 Type
@@ -232,9 +232,9 @@ UNION ALL
   SUM(Total_Guests) AS Total_Guests
 FROM(SELECT 
   *,
-  CASE WHEN Total_Guests IS NOT NULL THEN "Tour" ELSE null END AS Type
-  FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.invoices_tour_companies`)
-WHERE Cruise_Ship_Name IS NULL
+  CASE WHEN Total_Guests IS NOT NULL THEN "source_D" ELSE null END AS Type
+  FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.invoices_source_D_companies`)
+WHERE source_A_group_Name IS NULL
 GROUP BY 
   Time,
   Type
@@ -247,8 +247,8 @@ UNION ALL
 FROM
 (SELECT 
   *,
-  CASE WHEN Local IS FALSE THEN "Stayover" ELSE "Local" END AS Type
-  FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.customer_data_stayovers`)
+  CASE WHEN BorC IS FALSE THEN "source_C" ELSE "source_B" END AS Type
+  FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.customer_data_source_C`)
 GROUP BY
   Tour_Time,
   Type));
@@ -264,44 +264,43 @@ GROUP BY
 
 
 ----------------------Date Grouped----------------------
---Cruise Date table
-CREATE TABLE Cayman_Crystal_Caves.date_cruise
+--source_A Date table
+CREATE TABLE Cayman_Crystal_Caves.date_source_A
   AS (SELECT *,
         (CASE
           WHEN Total_Guests > 0
-            THEN "Cruise"
+            THEN "source_A"
             ELSE "0"
         END) AS guest_source
-      FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.invoices_cruise_ships_only`);
+      FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.invoices_source_A_only`);
 
---Tour date table
-CREATE TABLE Cayman_Crystal_Caves.date_tour
+--source_D date table
+CREATE TABLE Cayman_Crystal_Caves.date_source_D
   AS (SELECT *,
         (CASE
           WHEN Total_Guests > 0
-            THEN "Tour"
+            THEN "source_D"
             ELSE "0"
         END) AS guest_source
-      FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.invoices_tour_companies`);
+      FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.invoices_source_D_companies`);
 
 --Stayover date table
-CREATE TABLE Cayman_Crystal_Caves.date_stayover
+CREATE TABLE Cayman_Crystal_Caves.date_Stayover
   AS (SELECT *,
         (CASE
-          WHEN Local IS TRUE
-            THEN "Local"
-            ELSE "Stayover"
+          WHEN BorC IS TRUE
+            THEN "source_B"
+            ELSE "source_C"
         END) AS guest_source
-      FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.customer_data_stayovers`);
+      FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.customer_data_source_C`);
 
 
 
 --Joining tables of dates from each guest source--
--------NEED fulll customer peek/reservation data from matthew--------
 --Casting date column in datestayover as date
 SELECT PARSE_DATE('%m/%d/%Y', Date)
-FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.date_stayover`
-WHERE Date != "Darien Hall";
+FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.date_source_C`
+WHERE Date != "name";
 
 CREATE TABLE Cayman_Crystal_Caves.dates_grouped
   AS
@@ -309,7 +308,7 @@ CREATE TABLE Cayman_Crystal_Caves.dates_grouped
     Date,
     guest_source,
     SUM(Total_Guests) AS total_guests
-  FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.date_cruise` 
+  FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.date_source_A` 
   GROUP BY
     Date,
     guest_source
@@ -318,9 +317,9 @@ CREATE TABLE Cayman_Crystal_Caves.dates_grouped
       Date,
       guest_source,
       SUM(Total_Guests) AS total_guests
-    FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.date_tour` 
+    FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.date_source_D` 
     WHERE 
-      Cruise_Ship_Name IS NULL
+      source_A_group_Name IS NULL
     GROUP BY
       Date,
       guest_source)
@@ -332,8 +331,8 @@ CREATE TABLE Cayman_Crystal_Caves.dates_grouped
     FROM 
       (SELECT *, 
       PARSE_DATE('%m/%d/%Y', Date) AS Dated
-      FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.date_stayover`
-      WHERE Date != "Darien Hall")
+      FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.date_source_C`
+      WHERE Date != "name")
     GROUP BY
       Date,
       guest_source));
@@ -347,13 +346,13 @@ SELECT
   Kids_Qty,
   Local,
   SUM(Total_Qty) AS total_guests
-FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.customer_data_stayovers`
+FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.customer_data_source_C`
   WHERE 
     Kids_Qty > 0
 Group By 
   Total_Qty, 
   Kids_Qty,
-  Local;
+  BorC;
 
 -------
 
@@ -361,17 +360,17 @@ Group By
 ----Number of occurance of cruise ship----
 --Shows how number of cruise is with market pen
 SELECT
-  Cruise_Ship_Name,
+  source_A_group_Name,
   SUM(Total_Guests) AS total,
   COUNT(Total_Guests) AS count,
   SUM(Total_Guests)/COUNT(Total_Guests) AS guests_per_occurance,
-  SUM(Total_Guests)/SUM(total_passenger_on_ship) AS market_pen
+  SUM(Total_Guests)/SUM(total_guests_in_group) AS market_pen
 FROM 
   (
     SELECT *,
-      PARSE_NUMERIC(Total_Passengers_on_Ship) AS total_passenger_on_ship
-    FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.invoices_cruise_ships_only`)
-GROUP BY Cruise_Ship_Name;
+      PARSE_NUMERIC(total_guest_in_group) AS total_guests_in_group
+    FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.invoices_source_A_only`)
+GROUP BY source_A_group_Name;
 ---------------------------------------------------------------------------
 
 
@@ -388,12 +387,12 @@ FROM
       OR Reservation_type LIKE "%pickup%"
       OR Reservation_type LIKE "%Pkup%" 
       OR Reservation_type LIKE "%pkup%"
-      AND Local IS FALSE
+      AND BorC IS FALSE
         THEN "Pickup"
         ELSE "No Pickup" 
         END) AS pickup
-   FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.customer_data_stayovers`)
-   WHERE Local IS FALSE
+   FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.customer_data_source_C`)
+   WHERE BorC IS FALSE
 GROUP BY pickup, tour_time;
 ----------------------------------------------------------------------------------
 
@@ -402,7 +401,7 @@ GROUP BY pickup, tour_time;
 SELECT
   SUM(Adult_Qty) AS total_guests,
   Date,
-  Local,
+  BorC,
   age
 FROM
   (SELECT 
@@ -412,17 +411,17 @@ FROM
       THEN "Adult"
       ELSE null
       END) AS age
-  FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.customer_data_stayovers`)
+  FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.customer_data_source_C`)
 WHERE Adult_Qty > 0
 GROUP BY 
   Date,
-  Local,
+  BorC,
   age
 UNION ALL
 (SELECT
   SUM(Kids_Qty) AS total_kids,
   Date,
-  Local,
+  BorC,
   age
 FROM
   (SELECT 
@@ -432,28 +431,28 @@ FROM
       THEN "kid"
       ELSE null
       END) AS age
-  FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.customer_data_stayovers`)
+  FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.customer_data_source_C`)
 WHERE Kids_Qty > 0
 GROUP BY 
   Date,
-  Local,
+  BorC,
   age);
 
 
 --Checking if percentage market pen adds up
 SELECT
-  SUM(Total_Passengers_On_Ships),
-  Cruise_Company
+  SUM(total_guests_in_group),
+  source_A_Company
 FROM(SELECT *,
-  PARSE_NUMERIC(Total_Passengers_On_Ship) AS Total_Passengers_On_Ships
-  FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.invoices_cruise_ships_only`)
-GROUP BY Cruise_Company;
+  PARSE_NUMERIC(total_guest_in_group) AS total_guests_in_group
+  FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.invoices_source_A__only`)
+GROUP BY source_A_Company;
 
 
 ------------------------------------------------Cruise company dates bar chart
 SELECT
   Date,
-  Cruise_Company,
+  source_A_Company,
   SUM(Total_Guests) AS total_guests,
   AVG(Market_Penetrations) AS market_pen
 FROM
@@ -461,8 +460,9 @@ FROM
     SELECT
       *,
       PARSE_NUMERIC(Market_Penetration____) AS Market_Penetrations
-    FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.invoices_cruise_ships_only` 
+    FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.invoices_source_A_only` 
   )
 GROUP BY
   Date,
-  Cruise_Company;
+  source_A_Company;
+
