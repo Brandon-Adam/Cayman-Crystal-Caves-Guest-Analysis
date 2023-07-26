@@ -1,4 +1,4 @@
 # Cayman-Crystal-Caves-Guest-Analysis
-This project analyzes guests that visited the Cayman Crystal Caves between January 2022 - June 2023.
+This is an example of the dashboard created for Cayman Crystal Caves using randomized data.
 
-Visualizations created using these SQL queries is available [here](https://public.tableau.com/app/profile/brandon.adam5912/viz/CaymanCrystalCavesDashboard07142023/GuestSources).
+Visualizations created using these SQL queries is available [here](https://public.tableau.com/app/profile/brandon.adam5912/viz/BusinessAnalysis07252023/GuestSources).
