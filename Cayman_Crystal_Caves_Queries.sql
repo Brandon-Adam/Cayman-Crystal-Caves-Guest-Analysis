@@ -77,7 +77,7 @@ FROM
 GROUP BY source_A_Company;
 
 
---Most popular time for cruise companies
+--Most popular time for source_A companies
 SELECT
   source_A_Company,
   Time,
@@ -93,7 +93,7 @@ GROUP BY Time, source_A_Company;
 
 
 
----------------------------------Tour Companies------------------------------
+---------------------------------source_D Companies------------------------------
 
 SELECT
   source_D_Company,
@@ -131,7 +131,7 @@ GROUP BY
 
 
 ----------------------------Full Data---------------------------------------
---Deleting rows that are N/A for analysis and adding boolean column for local
+--Deleting rows that are N/A for analysis and adding boolean column for source B or C
 CREATE TABLE Cayman_Crystal_Caves.customer_data_source_C
   AS (SELECT *,
         CASE
@@ -297,7 +297,7 @@ CREATE TABLE Cayman_Crystal_Caves.date_Stayover
 
 
 --Joining tables of dates from each guest source--
---Casting date column in datestayover as date
+--Casting date column in date_source_C as date
 SELECT PARSE_DATE('%m/%d/%Y', Date)
 FROM `optimal-bivouac-388416.Cayman_Crystal_Caves.date_source_C`
 WHERE Date != "name";
@@ -357,8 +357,8 @@ Group By
 -------
 
 
-----Number of occurance of cruise ship----
---Shows how number of cruise is with market pen
+----Number of occurance of source_A_group----
+--Shows how number of source A is with market pen
 SELECT
   source_A_group_Name,
   SUM(Total_Guests) AS total,
@@ -374,7 +374,7 @@ GROUP BY source_A_group_Name;
 ---------------------------------------------------------------------------
 
 
-------Pickup vs walk-in for stayovers------------------------------------------------------
+------Pickup vs walk-in for source C------------------------------------------------------
 SELECT
   SUM(Total_Qty) AS total_guests,
   tour_time,
@@ -449,7 +449,7 @@ FROM(SELECT *,
 GROUP BY source_A_Company;
 
 
-------------------------------------------------Cruise company dates bar chart
+------------------------------------------------source_A company dates bar chart
 SELECT
   Date,
   source_A_Company,
